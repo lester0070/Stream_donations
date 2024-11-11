@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support My Stream</title>
+
+    <!-- Link to Staatliches Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Staatliches&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: Arial, sans-serif; /* Default font */
+            background-color: #2596be; /* Set background color to blue */
+            color: #333;
+            padding: 10px;
+        }
+
+        /* Apply Staatliches Font for headings */
+        h1 {
+            font-family: 'Staatliches', sans-serif; /* Apply Staatliches font for headings */
+            font-size: 2em;
+            margin-bottom: 20px; /* Increase the space between "Support My Stream" and the next text */
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            max-width: 400px;
+            width: 100%;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            width: 100px; /* Adjust logo size */
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1em;
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        .donate-button {
+            display: inline-block;
+            padding: 12px 24px;
+            font-size: 1.2em;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background 0.3s;
+            pointer-events: none; /* Disable the button by default */
+            opacity: 0.5; /* Make it look disabled */
+        }
+
+        .donate-button.active {
+            pointer-events: auto; /* Enable the button */
+            opacity: 1; /* Make it look active */
+        }
+
+        .donate-button:hover {
+            background-color: #0056b3;
+        }
+
+        .name-input,
+        .message-input {
+            padding: 8px;
+            font-size: 1em;
+            margin-bottom: 15px;
+            width: 80%;
+            max-width: 300px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .message-input {
+            height: 100px; /* Make the message box larger */
+        }
+
+        .thank-you-container {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .thank-you-container h1 {
+            margin-bottom: 20px; /* Space below the "Thank You" text */
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="donation-form">
+        <!-- Logo Section -->
+        <img src="C:\Users\LESTER\Downloads\spark logo.png" alt="Logo" class="logo">
+
+        <h1>Support My Stream</h1>
+        <p>Thank you for supporting my Stream! Please enter your name and message to personalize the donation.</p>
+
+        <!-- Donation Form -->
+        <input type="text" id="donor-name" class="name-input" placeholder="Enter your name" required />
+        <textarea id="donor-message" class="message-input" placeholder="Write a message (optional)"></textarea>
+
+        <!-- Donate Button -->
+        <a id="donate-link" href="#" class="donate-button" onclick="handleDonateClick(event)">Donate with UPI</a>
+    </div>
+
+    <div class="container thank-you-container" id="thank-you-container">
+        <h1>Thank You for Your Donation!</h1>
+        <p id="thank-you-message"></p>
+    </div>
+
+    <script>
+        // Update the Donate link with the user's name and message
+        document.getElementById('donor-name').addEventListener('input', updateDonateLink);
+        document.getElementById('donor-message').addEventListener('input', updateDonateLink);
+
+        // Check if the name is entered to enable the donate button
+        document.getElementById('donor-name').addEventListener('input', toggleDonateButton);
+
+        function updateDonateLink() {
+            let name = encodeURIComponent(document.getElementById('donor-name').value.trim());
+            let message = encodeURIComponent(document.getElementById('donor-message').value.trim());
+
+            if (name || message) {
+                document.getElementById('donate-link').href = `upi://pay?pa=your-upi-id@bank&pn=YourName&cu=INR&tn=Donation%20from%20${name}%20Message:%20${message}`;
+            } else {
+                document.getElementById('donate-link').href = '#';
+            }
+        }
+
+        // Function to toggle the donate button based on name input
+        function toggleDonateButton() {
+            const name = document.getElementById('donor-name').value.trim();
+            const donateButton = document.getElementById('donate-link');
+
+            // If the name is not empty, enable the button
+            if (name) {
+                donateButton.classList.add('active');
+            } else {
+                donateButton.classList.remove('active');
+            }
+        }
+
+        // Handle Donate Button Click
+        function handleDonateClick(event) {
+            event.preventDefault();  // Prevent the default action (following the link)
+            
+            let name = document.getElementById('donor-name').value.trim();
+            let message = document.getElementById('donor-message').value.trim();
+
+            // Open the UPI payment app (this could open a link to the UPI app)
+            window.location.href = `upi://pay?pa=your-upi-id@bank&pn=YourName&cu=INR&tn=Donation%20from%20${encodeURIComponent(name)}%20Message:%20${encodeURIComponent(message)}`;
+
+            // Hide donation form and show the Thank You message after 10 seconds
+            setTimeout(() => {
+                document.getElementById('donation-form').style.display = 'none';
+                document.getElementById('thank-you-container').style.display = 'block';
+                document.getElementById('thank-you-message').textContent = `Thank you, ${name}, for your generous donation!`;
+            }, 10000); // 10 seconds delay
+        }
+    </script>
+</body>
+</html>
